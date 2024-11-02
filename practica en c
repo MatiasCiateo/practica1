@@ -1,0 +1,274 @@
+#include <stdio.h>
+
+// Definición de las variables globales.
+int aeropuerto1 = 0, aeropuerto2 = 0, aeropuerto3 = 0, aeropuerto4 = 0;
+int maletas20kgRechaAero1 = 0, maletas32kgRechaAero1 = 0;
+int maletas20kgRechaAero2 = 0, maletas32kgRechaAero2 = 0;
+int maletas20kgRechaAero3 = 0, maletas32kgRechaAero3 = 0;
+int maletas20kgRechaAero4 = 0, maletas32kgRechaAero4 = 0;
+
+// Capacidad máxima de carga por vuelo en kg.
+int cargaVuelo;                 // Empieza vacia, por el dato lo carga el usuario.
+int maleta20 = 0, maleta32 = 0; // Contadores de las maletas para cada peso.
+int Totalmaletas = 0;
+int maxVuelo = 120; // Total vuelos por dia.
+// Variables contadores para el exceso de maletas por aeropuerto.
+int ExesoAero1 = 0, ExesoAero2 = 0, ExesoAero3 = 0, ExesoAero4 = 0;
+int vueloActual = 0;
+
+//* --------------------------------------------- MODULARIZACION -----------------------------------------------
+
+//? Modulo para con sumar las operaciones en los aeropuertos.
+//? los aeropuerto 1, 2, 3, 4 son pasados por referencia
+int sumarAeropuerto(int ordenAero, int *aero1, int *aero2, int *aero3, int *aero4)
+{
+    printf("orden del aeropuerto %d \n", ordenAero);
+    switch (ordenAero)
+    {
+    case 1:
+        (*aero1)++;
+        break;
+    case 2:
+        (*aero2)++;
+        break;
+    case 3:
+        (*aero3)++;
+        break;
+    case 4:
+        (*aero4)++;
+        break;
+    default:
+        printf("Numero de aeropuerto incorrecto.\n");
+        break;
+    };
+
+    return 0;
+};
+
+//? Paso por referencia ExesoAero1,2,3,4 - maletas20kgRechaAero1,2,3,4 - maletas32kgRechaAero1,2,3,4
+//? maleta es un valor solo de entrada.
+int maletasRechaAero1(int *ExesoAero1, int maleta, int *maletas20kgRechaAero1, int *maletas32kgRechaAero1)
+{
+    (*ExesoAero1)++;
+    if (maleta == 1)
+    {
+        (*maletas20kgRechaAero1)++;
+    }
+    else
+    {
+        (*maletas32kgRechaAero1)++;
+    };
+    return 0;
+};
+
+int maletasRechaAero2(int *ExesoAero2, int maleta, int *maletas20kgRechaAero1, int *maletas32kgRechaAero1)
+{
+    (*ExesoAero2)++;
+    if (maleta == 1)
+    {
+        (*maletas20kgRechaAero1)++;
+    }
+    else
+    {
+        (*maletas32kgRechaAero1)++;
+    };
+
+    return 0;
+};
+
+int maletasRechaAero3(int *ExesoAero3, int maleta, int *maletas20kgRechaAero1, int *maletas32kgRechaAero1)
+{
+    (*ExesoAero3)++;
+    if (maleta == 1)
+    {
+        (*maletas20kgRechaAero1)++;
+    }
+    else
+    {
+        (*maletas32kgRechaAero1)++;
+    };
+    return 0;
+};
+
+int maletasRechaAero4(int *ExesoAero4, int maleta, int *maletas20kgRechaAero1, int *maletas32kgRechaAero1)
+{
+    (*ExesoAero4)++;
+    if (maleta == 1)
+    {
+        (*maletas20kgRechaAero1)++;
+    }
+    else
+    {
+        (*maletas32kgRechaAero1)++;
+    };
+    return 0;
+};
+
+//? Contador de maletas rechazadas
+void maletasRecha20kg(int *capacidadActual, int cargaVuelo, int *maleta20, int *Totalmaletas)
+{
+    if (*capacidadActual + 20 <= cargaVuelo)
+    {
+        (*maleta20)++;
+        (*capacidadActual) += 20;
+        (*Totalmaletas)++;
+    }
+    else
+    {
+        printf("La capacidad de carga ha alcanzado su limite con las valijas de 20kg.\n");
+    }
+}
+
+void maletasRecha32kg(int *capacidadActual, int cargaVuelo, int *maleta32, int *Totalmaletas)
+{
+    if (*capacidadActual + 32 <= cargaVuelo)
+    {
+        (*maleta32)++;
+        (*capacidadActual) += 32;
+        (*Totalmaletas)++;
+    }
+    else
+    {
+        printf("La capacidad de carga ha alcanzado su limite con las valijas de 32kg.\n");
+    }
+};
+
+//* ------------------------------------------------------------------------------------------------------------
+
+//! FUNCION PRINCIPAL main()
+int main()
+{
+    int ingreso1;
+    printf("Bienvenido! Tiene vuelos para cargar?\n");
+    printf("1 - Si tengo\n");
+    printf("Cualquier otro valor para terminar\n");
+    scanf("%d", &ingreso1);
+
+    if (ingreso1 == 1)
+    {
+        while (ingreso1 == 1 && maxVuelo > 0)
+        {
+            maxVuelo--;    // Le resta 1 a los 120 vuelos por día.
+            vueloActual++; // Le suma 1 al contador de vuelos.
+
+            // Inicio del registro del vuelo
+            printf("Iniciando carga para el vuelo %d\n", vueloActual);
+            printf("Cual es la maxima capacidad en kg de carga en bodega del vuelo?\n");
+            scanf("%d", &cargaVuelo);
+
+            // De donde sale el vuelo aeropuerto 1, 2, 3, 4
+            printf("Cual es el Numero de Orden del Aeropuerto de salida:\n");
+            printf("1 - Aeropuerto 1 \n");
+            printf("2 - Aeropuerto 2 \n");
+            printf("3 - Aeropuerto 3 \n");
+            printf("4 - Aeropuerto 4 \n");
+            int ordenAeropuerto;
+            scanf("%d", &ordenAeropuerto);
+
+            // Menú de carga para valijas.
+            int capacidadActual = 0;
+            maleta20 = 0;
+            maleta32 = 0;
+
+            int maleta; // la dejo afuera, sino es variable local dentro del ciclo.
+            // despues no la puedo usar para Registrar maletas rechazadas por aeropuerto
+
+            //! Creo que si se puede modularizar
+            while (capacidadActual < cargaVuelo)
+            {
+                maleta;
+                printf("seleccione el tipo de valija que desea cargar \n");
+                printf("1 - Para valijas de 20kg \n");
+                printf("2 - Para valijas de 32kg \n");
+                printf("0 - Para terminar el ingreso de maletas\n");
+                scanf("%d", &maleta);
+
+                if (maleta == 1)
+                {
+                    maletasRecha20kg(&capacidadActual, cargaVuelo, &maleta20, &Totalmaletas);
+                }
+                else if (maleta == 2)
+                {
+                    maletasRecha32kg(&capacidadActual, cargaVuelo, &maleta32, &Totalmaletas);
+                }
+                else if (maleta == 0)
+                {
+                    printf("Terminando el ingreso de maletas para el vuelo %d.\n", vueloActual);
+                    break;
+                }
+                else
+                {
+                    printf("Debe de ingresar un valor correcto\n");
+                }
+            }
+
+            // Suma 1 para cada aeropuerto.
+            sumarAeropuerto(ordenAeropuerto, &aeropuerto1, &aeropuerto2, &aeropuerto3, &aeropuerto4);
+
+            // Registrar maletas rechazadas por aeropuerto
+            //! SE PUEDE MODULARIZAR.
+            if (capacidadActual > cargaVuelo)
+            {
+                switch (ordenAeropuerto)
+                {
+                case 1:
+                    maletasRechaAero1(&ExesoAero1, maleta, &maletas20kgRechaAero1, &maletas32kgRechaAero1);
+                    break;
+                case 2:
+                    maletasRechaAero2(&ExesoAero2, maleta, &maletas20kgRechaAero1, &maletas32kgRechaAero1);
+                    break;
+                case 3:
+                    maletasRechaAero3(&ExesoAero3, maleta, &maletas20kgRechaAero1, &maletas32kgRechaAero1);
+                    break;
+                case 4:
+                    maletasRechaAero4(&ExesoAero4, maleta, &maletas20kgRechaAero1, &maletas32kgRechaAero1);
+                    break;
+                }
+            }
+
+            //! Conteo de las maletas rechazadas.
+            int valor;
+            printf("Quedaron maletas sin cargar por falta de espacio en bodega? \n");
+            printf("1 - Si\n");
+            printf("2 - No\n");
+            scanf('%d', &valor);
+
+            // Opción para terminar el proceso y mostrar resultados
+            printf("Desea terminar el proceso y mostrar los resultados?\n");
+            printf("1 - Si\n");
+            printf("2 - No\n");
+
+            int terminar;
+            scanf("%d", &terminar);
+            if (terminar == 1)
+            {
+                break;
+            }
+        }
+
+        // Impresión de los resultados.
+        //! modularizar manana, es resto esta
+
+        printf("Aeropuerto 1 tuvo %d vuelos\n", aeropuerto1);
+        printf("Aeropuerto 2 tuvo %d vuelos\n", aeropuerto2);
+        printf("Aeropuerto 3 tuvo %d vuelos\n", aeropuerto3);
+        printf("Aeropuerto 4 tuvo %d vuelos\n", aeropuerto4);
+
+        printf("El porcentaje de las maletas de 32kg: %.2f\n", (float)(maleta32 * 100) / Totalmaletas);
+        printf("El porcentaje de las maletas de 20kg: %.2f\n", (float)(maleta20 * 100) / Totalmaletas);
+
+        printf("Total de solicitudes de valijas de 20 kg: %d\n", maleta20);
+        printf("Total de solicitudes de valijas de 32 kg: %d\n", maleta32);
+
+        // Cálculo del promedio de valijas por vuelo
+        float promedioValijasPorVuelo = (float)Totalmaletas / vueloActual;
+        printf("Promedio de valijas por vuelo: %.2f\n", promedioValijasPorVuelo);
+    }
+    else
+    {
+        printf("El programa ha finalizado, Que tengas un lindo dia! :)\n");
+        return 0;
+    };
+
+    return 0;
+}
